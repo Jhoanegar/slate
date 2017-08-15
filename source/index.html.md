@@ -20,7 +20,7 @@ search: true
 Esta versión incluye una descripción de todos los endpoints excepto los que tienen que ver con el chat
 # Introducción
 
-Documentación para la conexión de las apps de Audi Evoluciona.
+Documentación para la conexión de las apps de Audi Evoluciona. 
 
 
 # Autenticación
@@ -101,7 +101,7 @@ El token será un API SECRET en el caso de endpoints que no requieran sesión y 
 
 > Roomie podría ser null si no se tiene un compañero de habitación
 
-Inicia la sesión de un usuario y devuleve todo el contenido que se requiere para completar el perfil.
+Inicia la sesión de un usuario y devuelve todo el contenido que se requiere para completar el perfil.
 
 <aside class="info">Para todas las peticiones sucesivas se deberá de usar el token de sesión devuelto por este endpoint</aside>
 
@@ -111,7 +111,7 @@ Inicia la sesión de un usuario y devuleve todo el contenido que se requiere par
 
 ### Body Parameters
 
-Parameter | Tipo | Requerido | Description
+Parámetro | Tipo | Requerido | Description
 --------- | ----------- | ----------- | -----------
 email | String | SI | Email del usuario
 codigo | String | SI | El código alfanumérico que le llegó al usuario por correo
@@ -307,6 +307,9 @@ email | String | SI | Email a validar
 
 
 ## Validar código
+<aside class="info">
+Este endpoint es un alias del endpoint de login.
+</aside>
 
 > Body petición:
 
@@ -358,7 +361,7 @@ email | String | SI | Email a validar
 }
 ```
 
-Valida el email como perteneciente al usuario y devuelve su información de perfil.
+Valida el email perteneciente al usuario y devuelve su información de perfil.
 
 ### HTTP Request
 
@@ -376,7 +379,7 @@ Es necesario almacenar y enviar el valor del <code>email</code> aún cuando no l
 </aside>
 
 #Contenidos
-<aside class="success">Para todas las peticiones sucesivas se deberá de usar el token de sesión devuelto anteriormente</aside>
+<aside class="success">Para todas las peticiones sucesivas se deberá de usar el token de sesión devuelto anteriormente en el header <code>authorization</code></aside>
 
 ## Feed de Noticias
 > Body petición:
