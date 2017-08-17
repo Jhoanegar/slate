@@ -21,13 +21,13 @@ search: true
 
 Cambios de la versión:
 
-* Se corrigió la respuesta del endpoint de `pre-registro` ahora se indica que se devuelve la info del perfil de usuario.
-* Se indica que el endpoint de `votacion` recibe un `Array` de valores, debido a que un usuario puede votar por varios workshops.
-* Se agregó a los endpoints de registro el email del compañero de habitación que faltaba.
-* Se añadió el endpoint de `reenviarCodigo`.
-* Se añadió el `idUsuario` a las respuestas del registro.
-* En los endpoints de `votacion` y `encuesta` se indica que si el key es `null` significa que la encuesta ya ha sido respondida por el usuario.
-* En los endpoints de `votacion` y `encuesta` se envía un nuevo key `fechas` que indican los días en los que se tiene que mostrar la encuesta/votación.
+* Se corrigió la respuesta del endpoint de [`pre-registro`](#pre-registro) ahora se indica que se devuelve la info del perfil de usuario.
+* Se indica que el endpoint de [`votacion`](#enviar-votacion) recibe un `Array` de valores, debido a que un usuario puede votar por varios workshops [Ver].
+* Se agregó a los endpoints de [login](#login) y [registro](#pre-registro) el email del compañero de habitación que faltaba.
+* Se añadió el endpoint de [`reenviarCodigo`](#reenviar-codigo).
+* Se añadió el `idUsuario` a las respuestas del [registro](#pre-registro) y [login](#login).
+* En los endpoints de [`votacion`](#votacion) y [`encuesta`](#encuesta) se indica que si el key es `null` significa que la encuesta ya ha sido respondida por el usuario.
+* En los endpoints de [`votacion`](#votacion) y [`encuesta`](#encuesta) se envía un nuevo key `fechas` que indican los días en los que se tiene que mostrar la encuesta/votación.
 
 ## Versión 1
 15 de agosto, 2017
