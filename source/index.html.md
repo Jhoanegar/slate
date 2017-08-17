@@ -14,7 +14,22 @@ includes:
 search: true
 ---
 
-# Versión 1
+# Versiones
+
+## Versión 2
+17 de agosto, 2017
+
+Cambios de la versión:
+
+* Se corrigió la respuesta del endpoint de `pre-registro` ahora se indica que se devuelve la info del perfil de usuario.
+* Se indica que el endpoint de `votacion` recibe un `Array` de valores, debido a que un usuario puede votar por varios workshops.
+* Se agregó a los endpoints de registro el email del compañero de habitación que faltaba.
+* Se añadió el endpoint de `reenviarCodigo`.
+* Se añadió el `idUsuario` a las respuestas del registro.
+* En los endpoints de `votacion` y `encuesta` se indica que si el key es `null` significa que la encuesta ya ha sido respondida por el usuario.
+* En los endpoints de `votacion` y `encuesta` se envía un nuevo key `fechas` que indican los días en los que se tiene que mostrar la encuesta/votación.
+
+## Versión 1
 15 de agosto, 2017
 
 Esta versión incluye una descripción de todos los endpoints excepto los que tienen que ver con el chat
@@ -63,6 +78,7 @@ El token será un API SECRET en el caso de endpoints que no requieran sesión y 
 {
   "tokenSesion": "ABCDEFGH123456789",
   "usuario": {
+    "idUsuario": 1,
     "nombre": "Juan",
     "apellidoPaterno": "Pérez",
     "apellidoMaterno": "Sánchéz",
@@ -92,7 +108,8 @@ El token será un API SECRET en el caso de endpoints que no requieran sesión y 
     "roomie": {
       "apellidoPaterno": "González",
       "apellidoMaterno": "Ramírez",
-      "nombre": "Alberto"
+      "nombre": "Alberto",
+      "email": "alberto.ramirez@gmail.com"
     }
   }
 }
@@ -201,7 +218,8 @@ Sin parámetros
     "roomie": {
       "apellidoPaterno": "González",
       "apellidoMaterno": "Ramírez",
-      "nombre": "Alberto"
+      "nombre": "Alberto",
+      "email": "alberto.gonzalez@gmail.com"
     }
   }
 }
@@ -212,36 +230,42 @@ Sin parámetros
 
 ```json
 {
-  "concesionarios": [
-    {
+  "tokenSesion": "ABCDEFGH123456789",
+  "usuario": {
+    "idUsuario": 1,
+    "nombre": "Juan",
+    "apellidoPaterno": "Pérez",
+    "apellidoMaterno": "Sánchéz",
+    "email": "juan.perez@ejemplo.com",
+    "concesionario": {
       "idConcesionario": 1,
-      "nombre": "Audi Center Condesa"
+      "nombre": "Audi Center Pedregal"
     },
-    {
-      "idConcesionario": 2,
-      "nombre": "Audi Center Satélite"
-    }
-  ],
-  "puestos": [
-    {
+    "puesto": {
       "idPuesto": 1,
       "nombre": "Gerente de Ventas"
     },
-    {
-      "idConcesionario": 2,
-      "nombre": "Gerente de Compras"
-    }
-  ],
-  "vias": [
-    {
-      "idVia": 1,
+    "fechaCumple": "1980-06-30",
+    "alergias": "",
+    "viaLlegada": {
+      "idViaLlegada": 1,
       "nombre": "Terrestre"
     },
-    {
-      "idVia": 2,
-      "nombre": "Aérea"
+    "llegada": {
+      "fecha": "2017-08-01",
+      "vuelo": "AM 209"
+    },
+    "salida": {
+      "fecha": "2017-08-02",
+      "vuelo": "AM 209"
+    },
+    "roomie": {
+      "apellidoPaterno": "González",
+      "apellidoMaterno": "Ramírez",
+      "nombre": "Alberto",
+      "email": "alberto.ramirez@gmail.com"
     }
-  ]
+  }
 }
 ```
 
@@ -274,6 +298,7 @@ roomie | Object | NO | Contiene la información del compañero de habitación de
 roomie.nombre | Object | SI | Nombre del compañero de habitación del usuario
 roomie.apellidoPaterno | Object | SI | Primer apellido del compañero de habitación del usuario
 roomie.apellidoMaterno | Object | SI | Segundo apellido del compañero de habitación del usuario
+roomie.email | Object | SI | Email del compañero de habitación del usuario
 
 ## Validar email
 
@@ -355,7 +380,8 @@ Este endpoint es un alias del endpoint de login.
     "roomie": {
       "apellidoPaterno": "González",
       "apellidoMaterno": "Ramírez",
-      "nombre": "Alberto"
+      "nombre": "Alberto",
+      "email": "alberto.ramirez@gmail.com"
     }
   }
 }
@@ -376,6 +402,47 @@ codigo | String | SI | Código a validar
 
 <aside class="notice">
 Es necesario almacenar y enviar el valor del <code>email</code> aún cuando no lo introduzca el usuario (por ejemplo, el caso de registro)
+</aside>
+
+## Reenviar código
+
+> Body petición:
+
+```json
+{
+  "email": "email@ejemplo.com",
+}
+
+{
+  "tokenSesion": "ABCDEFGHIJKLMNOPQ123456",
+}
+```
+
+> Respuesta
+
+```json
+{
+  "recibido": true
+}
+```
+
+Reenvía al usuario su código de verificación
+<aside class="notice">
+Por seguridad, este endpoint no indica si el email se encontró en nuestra BD, sólo responde si se procesó la petición.
+</aside>
+### HTTP Request
+
+`POST http://example.com/api/v1/usuario/reenviarCodigo`
+
+### Body Parameters
+
+Parámetro | Tipo | Requerido | Descripción
+--------- | ----------- | ----------- | -----------
+email | String | SI | Email del usuario
+tokenSesion | String | SI | Token de sesión del usuario
+
+<aside class="notice">
+No es necesario enviar ambos simultáneamente pero sí es necesario enviar uno
 </aside>
 
 #Contenidos
@@ -539,6 +606,10 @@ Sin parámetros
 
 ```json
 {
+  "fechas": [
+    "2017-10-01",
+    "2017-10-02"
+  ],
   "workshops": [
     {
       "id": 1,
@@ -547,12 +618,26 @@ Sin parámetros
     {
       "id": 2,
       "nombre": "Otro Workshop"
+    },
+    {
+      "id": 3,
+      "nombre": "El Workshop"
+    },
+    {
+      "id": 4,
+      "nombre": "El Workshop"
+    },
+    {
+      "id": 5,
+      "nombre": "La Workshop"
     }
   ]
 }
 ```
 
-Al concluir todos los días del evento se mostrará un link para que los usuarios voten por su taller favorito.
+Al concluir los días del evento indicados en el key `fechas` se mostrará un link para que los usuarios voten por sus talleres favoritos (3).
+
+Si el key `workshops` es `null` la votación ya ha sido enviada.
 
 ### HTTP Request
 
@@ -567,7 +652,7 @@ Sin parámetros
 
 ```json
 {
-  "idWorkshop": 2
+  "idsWorkshop": [1,2,5]
 }
 ```
 
@@ -604,6 +689,9 @@ idWorkshop | Int | SI | Id del workshop seleccionado
 
 ```json
 {
+  "fechas": [
+    "2017-10-01"
+  ],
   "encuesta": [
     {
       "idPregunta": 1,
@@ -633,7 +721,7 @@ idWorkshop | Int | SI | Id del workshop seleccionado
 }
 ```
 
-Al concluir todos los días del evento se mostrará un link para que los usuarios voten por el evento
+Es necesario mostrar la encuesta al final de los días que indica el key `fechas`. Si el key `encuesta` es null, la encuesta ya ha sido respondida por el usuario y no se deberá pedir que se responda.
 
 ### HTTP Request
 
