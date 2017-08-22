@@ -16,6 +16,15 @@ search: true
 
 # Versiones
 
+## Versión 3
+21 de agosto, 2017
+
+Cambios de la versión:
+
+* Se añadió el campo `udid` a los endpoints de [`pre-registro`](#pre-registro), [login](#login) y [validación de código](#validar-codigo).
+* Se especificó qué hacer con el status code 400 en la sección de [errores](#errores)
+* Se quitaron los acentos de los keys `descripcion`. Por ejemplo en [agenda](#agenda)
+
 ## Versión 2
 17 de agosto, 2017
 
@@ -68,7 +77,8 @@ El token será un API SECRET en el caso de endpoints que no requieran sesión y 
 ```json
 {
   "email": "email@ejemplo.com",
-  "codigo": "ABC123"
+  "codigo": "ABC123",
+  "udid": "1234567890ABCDEFGHIJKL"
 }
 ```
 
@@ -132,6 +142,7 @@ Parámetro | Tipo | Requerido | Description
 --------- | ----------- | ----------- | -----------
 email | String | SI | Email del usuario
 codigo | String | SI | El código alfanumérico que le llegó al usuario por correo
+udid | String | SI | Token para envío de notificaciones push. Si el usuario no acepta el envío de push enviar el identificador único del dispositivo.
 
 ## Catálogos registro
 
@@ -197,6 +208,7 @@ Sin parámetros
 
 ```json
 {
+  "udid": "ABCDEFGHIJKL",
   "usuario": {
     "nombre": "Juan",
     "apellidoPaterno": "Pérez",
@@ -279,6 +291,7 @@ Este endpoint guarda los datos del usuario para evitar que los tenga que volver 
 
 Parámetro | Tipo | Requerido | Descripción
 --------- | ----------- | ----------- | -----------
+udid | String | SI | Token para envío de notificaciones push. Si el usuario no acepta el envío de push enviar el identificador único del dispositivo.
 nombre | String | SI | Nombres del usuario
 apellidoPaterno | String | SI | Apellido del Usuario
 apellidoMaterno | String | SI | Segundo Apellido del usuario
@@ -340,6 +353,7 @@ Este endpoint es un alias del endpoint de login.
 
 ```json
 {
+  "udid": "123456789ABCDEFJ"
   "email": "email@ejemplo.com",
   "codigo": "ABC123"
 }
@@ -397,6 +411,7 @@ Valida el email perteneciente al usuario y devuelve su información de perfil.
 
 Parámetro | Tipo | Requerido | Descripción
 --------- | ----------- | ----------- | -----------
+udid | STRING | SI | Token para envio de push. Si el usuario no acepta el envío enviar el identificador único del dispositivo
 email | String | SI | Email a validar
 codigo | String | SI | Código a validar
 
@@ -463,12 +478,12 @@ No es necesario enviar ambos simultáneamente pero sí es necesario enviar uno
   "noticias": [
     {
       "titulo": "Noticia de Última Hora",
-      "descripción": "Descripción de la noticia",
+      "descripcion": "Descripción de la noticia",
       "urlImagen": "http://imagen.dominio.com/url"
     },
     {
       "titulo": "Noticia de Última Hora 2",
-      "descripción": "Descripción de la noticia 2",
+      "descripcion": "Descripción de la noticia 2",
       "urlImagen": "http://imagen.dominio.com/url2"
     }
   ]
@@ -505,14 +520,14 @@ Sin parámetros
       "eventos": [
           {
             "titulo": "Agenda 1",
-            "descripción": "Descripción del evento",
+            "descripcion": "Descripción del evento",
             "horaInicio": "11:00",
             "horaFin": "12:00",
             "adjunto": "http://archivos.dominio.com/url"
           },
           {
             "titulo": "Agenda 2",
-            "descripción": "Descripción del evento",
+            "descripcion": "Descripción del evento",
             "horaInicio": "13:00",
             "horaFin": "14:00",
             "adjunto": null
@@ -524,14 +539,14 @@ Sin parámetros
       "eventos": [
           {
             "titulo": "Agenda 3",
-            "descripción": "Descripción del evento",
+            "descripcion": "Descripción del evento",
             "horaInicio": "11:00",
             "horaFin": "12:00",
             "adjunto": "http://archivos.dominio.com/url"
           },
           {
             "titulo": "Agenda 4",
-            "descripción": "Descripción del evento",
+            "descripcion": "Descripción del evento",
             "horaInicio": "13:00",
             "horaFin": "14:00",
             "adjunto": null
