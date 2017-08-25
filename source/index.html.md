@@ -20,8 +20,10 @@ search: true
 21 de agosto, 2017
 
 Cambios de la versión:
-
+* Se añadió endpoint de contactos en chat.
 * Se añadió el campo `udid` a los endpoints de [`pre-registro`](#pre-registro), [login](#login) y [validación de código](#validar-codigo).
+* Se añadió el campo `esSuperUsuario` a los endpoints de [`pre-registro`](#pre-registro), [login](#login) y [validación de código](#validar-codigo). Indica si es el usuario Tron.
+* Se añadió el campo `imagenUrl` al endpoint de [`pre-registro`](#pre-registro).
 * Se especificó qué hacer con el status code 400 en la sección de [errores](#errores)
 * Se quitaron los acentos de los keys `descripcion`. Por ejemplo en [agenda](#agenda)
 
@@ -89,10 +91,12 @@ El token será un API SECRET en el caso de endpoints que no requieran sesión y 
   "tokenSesion": "ABCDEFGH123456789",
   "usuario": {
     "idUsuario": 1,
+    "esSuperUsuario": false,
     "nombre": "Juan",
     "apellidoPaterno": "Pérez",
     "apellidoMaterno": "Sánchéz",
     "email": "juan.perez@ejemplo.com",
+    "imagenUrl": "http://example.com",
     "concesionario": {
       "idConcesionario": 1,
       "nombre": "Audi Center Pedregal"
@@ -245,9 +249,11 @@ Sin parámetros
   "tokenSesion": "ABCDEFGH123456789",
   "usuario": {
     "idUsuario": 1,
+    "esSuperUsuario": false,
     "nombre": "Juan",
     "apellidoPaterno": "Pérez",
     "apellidoMaterno": "Sánchéz",
+    "imagenUrl": "http://imagen.ejemplo.com",
     "email": "juan.perez@ejemplo.com",
     "concesionario": {
       "idConcesionario": 1,
@@ -790,4 +796,43 @@ encuesta[].idPregunta | Int | SI | Id de pregunta
 encuesta[].respuesta | String | SI | Texto de respuesta
 
 #Chat
-En progreso.
+La aplicación integra un chat que se divide en dos partes. Un grupo público del cual nadie se puede salir y al cual sólo el usuario Administrador (Tron) puede publicar. Y un chat entre cualquier par de usuarios de la aplicación. En este momento no se soportan grupos arbitrarios de usuarios.
+
+
+## Contactos
+> Body petición:
+
+```json
+{
+}
+```
+
+> Respuesta
+
+```json
+{
+    "usuarios": [
+        {
+            "id": 1,
+            "nombre": "Tron",
+            "apellidoPaterno": "Evoluciona",
+            "apellidoMaterno": "",
+            "imagenUrl": "http://tron",
+            "concesionario": {
+                "id": 1,
+                "nombre": "Audi Center Aguascalientes",
+                "codigo": "0151"
+            }
+        }
+    ]
+}
+```
+
+Es necesario llamar este endpoint cada vez que el usuario entra a la sección de chat.
+
+### HTTP Request
+
+`GET http://example.com/api/v1/encuesta/`
+
+### Body Parameters
+Ninguno
