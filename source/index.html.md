@@ -15,11 +15,20 @@ search: true
 ---
 
 # Versiones
+## Versión 4
+28 de agosto, 2017
+
+Cambios de la versión:
+
+* Se añadió endpoint de [chats activos](#chats-activos)
+* Se añadió endpoint de [enviar mensaje](#enviar-mensaje)
+* Se añadió endpoint de [historial](#historial)
 
 ## Versión 3
 21 de agosto, 2017
 
 Cambios de la versión:
+
 * Se añadió endpoint de contactos en chat.
 * Se añadió el campo `udid` a los endpoints de [`pre-registro`](#pre-registro), [login](#login) y [validación de código](#validar-codigo).
 * Se añadió el campo `esSuperUsuario` a los endpoints de [`pre-registro`](#pre-registro), [login](#login) y [validación de código](#validar-codigo). Indica si es el usuario Tron.
@@ -836,3 +845,215 @@ Es necesario llamar este endpoint cada vez que el usuario entra a la sección de
 
 ### Body Parameters
 Ninguno
+
+## Chats activos
+> Body petición:
+
+```json
+{
+}
+```
+
+> Respuesta
+
+```json
+{
+    "chats": [
+        {
+            "usuario": {
+                "idUsuario": 1,
+                "nombre": "Jhoan",
+                "imagenUrl": "http://tron"
+            },
+            "ultimoMensaje": {
+                "idMensaje": 34,
+                "mensaje": "Perfecto, espero",
+                "fecha": "2017-08-28T18:22:54.217Z"
+            }
+        }
+    ]
+}
+```
+
+Devuelve un `array` con todas las conversaciones activas del usuario ordenadas de la más reciente a la más antigua.
+
+### HTTP Request
+
+`GET http://example.com/api/v1/chats/activos/`
+
+### Respuesta
+Parámetro | Tipo | Descripción
+--------- | ----------- | ----------- | -----------
+chats | Array | Array que contiene los chats activos
+chats[] | Object | Objeto que representa un chat activo
+chats[].usuario | Object | Objeto que representa el usuario con el quien se tiene la conversacion
+chats[].usuario.idUsuario | Int | Id del usuario con quien se tiene la conversacion
+chats[].usuario.nombre | String | Nombre que se la da al chat y que coincide con el nombre de la persona con quien se tiene al chat
+chats[].usuario.imagenUrl | Int | Url de la imagen del usuario
+chats[].ultimoMensaje | Object | Objeto que contiene el último mensaje que se envió en esa conversación
+chats[].ultimoMensaje.idMensaje | Int | Id del mensaje
+chats[].ultimoMensaje.mensaje | String | Contenido del mensaje
+chats[].ultimoMensaje.fecha | Date | Fecha de envío del mensaje
+
+
+## Enviar mensaje
+> Body petición:
+
+```json
+{
+  "idUsuario": 1,
+  "mensaje": "Hola"
+}
+```
+
+> Respuesta
+
+```json
+{
+    "enviado": true
+}
+```
+
+Envía un mensaje a un usuario. En este proceso se crea internamente el chat y el cliente no necesita saber la existencia de este. Al haber al menos un mensaje entre dos usuarios el chat se es devuelto por el endpoint de chats activos.
+
+### HTTP Request
+
+`POST http://example.com/api/v1/chats/mensajes/nuevo/`
+
+### Body Petición
+Parámetro | Tipo | Requerido | Descripción
+--------- | ----------- | ----------- | -----------
+idUsuario | Int | Id del usuario al que se le desea enviar el mensaje. Este id se obtiene de la lista de [contactos](#contactos)
+mensaje | Str | Contenido del mensaje a enviar
+
+## Historial
+
+> Body petición:
+
+```json
+{
+}
+```
+
+
+> Query Petición:
+
+```json
+{
+  "idUsuario": 1,
+  "pagina": 1,
+  "desde": "2017-01-01T00:00:00.000Z"
+}
+```
+<aside class="notice">
+Nótese que los parámetros en este endpoint se envían como <code>query string</code> y no en el body.
+</aside>
+
+> Respuesta
+
+```json
+{
+    "mensajes": [
+        {
+            "mensaje": "Bien y tú?",
+            "idMensaje": 22,
+            "idUsuario": 1,
+            "idChat": 15,
+            "fecha": "2017-08-28T18:21:57.006Z",
+            "usuario": {
+                "idUsuario": 1,
+                "nombre": "Tron",
+                "apellidoPaterno": "Evoluciona",
+                "apellidoMaterno": "",
+                "imagenUrl": "http://tron"
+            }
+        },
+        {
+            "mensaje": "Cómo estás?",
+            "idMensaje": 21,
+            "idUsuario": 2,
+            "idChat": 15,
+            "fecha": "2017-08-28T18:21:49.614Z",
+            "usuario": {
+                "idUsuario": 2,
+                "nombre": "Jhoan",
+                "apellidoPaterno": "García",
+                "apellidoMaterno": "Cruz",
+                "imagenUrl": "http://lol.com"
+            }
+        },
+        {
+            "mensaje": "Hola Jhoan",
+            "idMensaje": 18,
+            "idUsuario": 1,
+            "idChat": 15,
+            "fecha": "2017-08-25T18:15:46.945Z",
+            "usuario": {
+                "idUsuario": 1,
+                "nombre": "Tron",
+                "apellidoPaterno": "Evoluciona",
+                "apellidoMaterno": "",
+                "imagenUrl": "http://tron"
+            }
+        },
+        {
+            "mensaje": "Hola Tron!",
+            "idMensaje": 17,
+            "idUsuario": 2,
+            "idChat": 15,
+            "fecha": "2017-08-25T18:15:44.665Z",
+            "usuario": {
+                "idUsuario": 2,
+                "nombre": "Jhoan",
+                "apellidoPaterno": "García",
+                "apellidoMaterno": "Cruz",
+                "imagenUrl": "http://lol.com"
+            }
+        }
+    ],
+    "meta": {
+        "paginaActual": 4,
+        "paginaSiguiente": 5,
+        "registrosEncontrados": 2,
+        "registrosTotales": 10
+    }
+}
+```
+Devuelve el historial de mensajes en una conversación.
+
+<aside class="success">
+Este endpoint está paginado.
+</aside>
+
+### HTTP Request
+
+`GET http://example.com/api/v1/chats/mensajes/historial/`
+
+### Query String
+Parámetro | Tipo | Requerido |Descripción
+--------- | ----------- | ----------- | -----------
+idUsuario | Int | SI | Usuario del cual se desea obtener el historial
+pagina | Int | NO | Pagina que se desea obtener del historia. Default `1`
+desde | Date | NO | Fecha desde la cual se desea obtener el historial. Default `NOW() / new Date`
+
+### Respuesta
+Parámetro | Tipo | Descripción
+--------- | ----------- | -----------
+mensajes | Array | Contiene el historial de mensajes
+mensajes[] | Object | Contiene los mensajes ordenados del más reciente al más antiguo
+mensajes[].mensaje | String | Contenido del mensaje
+mensajes[].idMensaje | Int | Id del mensaje
+mensajes[].idUsuario | Int | Id del usuario que envió el mensaje. El objeto `usuario` contiene información adicional sobre éste
+mensajes[].fecha | Date | Fecha de envío del mensaje
+mensajes[].usuario | Object | Contiene información adicional sobre la persona que envío el mensaje
+mensajes[].usuario.idUsuario | Object | Id del usuario que envió el mensaje
+mensajes[].usuario.nombre | String | Nombre del usuario que envió el mensaje
+mensajes[].usuario.apellidoPaterno | String | Apellido Paterno del usuario que envió el mensaje
+mensajes[].usuario.apellidoMaterno | String | Apellido Materno del usuario que envió el mensaje
+mensajes[].usuario.imagenUrl | String | Imagen del usuario que envió el mensaje
+meta | Object | Contiene información sobre la paginación
+meta.paginaActual | Int | La página que se devolvió
+meta.paginaSiguiente | Int | La página siguiente o bien `null` si no existe una página siguiente
+meta.registrosEncontrados | Int | El total de registros que se devolvieron en esta petición.
+meta.registrosTotales | Int | El total de mensajes que existen en esta conversación
+
