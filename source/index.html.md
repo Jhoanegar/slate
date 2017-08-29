@@ -15,6 +15,15 @@ search: true
 ---
 
 # Versiones
+## Versión 5
+29 de agosto, 2017
+
+* Se añadió endpoint de [ultimo visto](#ultimo-visto)
+* Se añadió endpoint de [actualizar perfil](#actualizar-perfil)
+* Se añadió el parámetro `imagenUrl` al endpoint de [`pre-registro`](#pre-registro)
+* Se añadió la sección de [notificaciones push](#notificaciones-push)
+* Se añadió la sección de [stickers](#stickers)
+
 ## Versión 4
 28 de agosto, 2017
 
@@ -230,6 +239,7 @@ Sin parámetros
     "idConcesionario": 1,
     "idPuesto": 1,
     "fechaCumple": "1980-06-30",
+    "imagenUrl": "http://..."
     "alergias": "",
     "idViaLlegada": 1,
     "llegada": {
@@ -311,6 +321,7 @@ nombre | String | SI | Nombres del usuario
 apellidoPaterno | String | SI | Apellido del Usuario
 apellidoMaterno | String | SI | Segundo Apellido del usuario
 email | String | SI | Email del usuario
+imagenUrl | String | SI | Url de la imagen del usuario
 idConcesionario | Int | SI | Id del concesionario elegido por el usuario
 idPuesto | Int | SI | Id del puesto elegido por el usuario
 fechaCumple | String | SI | Fecha de nacimiento del usuario en formato "YYYY-MM-DD"
@@ -474,6 +485,128 @@ tokenSesion | String | SI | Token de sesión del usuario
 <aside class="notice">
 No es necesario enviar ambos simultáneamente pero sí es necesario enviar uno
 </aside>
+
+
+## Actualizar Perfil
+
+> Body petición:
+
+```json
+{
+  "usuario": {
+    "nombre": "Juan",
+    "apellidoPaterno": "Pérez",
+    "apellidoMaterno": "Sánchéz",
+    "email": "juan.perez@ejemplo.com",
+    "idConcesionario": 1,
+    "idPuesto": 1,
+    "imagenUrl": "http://",
+    "fechaCumple": "1980-06-30",
+    "alergias": "",
+    "idViaLlegada": 1,
+    "llegada": {
+      "fecha": "2017-08-01",
+      "vuelo": "AM 209"
+    },
+    "salida": {
+      "fecha": "2017-08-02",
+      "vuelo": "AM 209"
+    },
+    "roomie": {
+      "apellidoPaterno": "González",
+      "apellidoMaterno": "Ramírez",
+      "nombre": "Alberto",
+      "email": "alberto.gonzalez@gmail.com"
+    }
+  }
+}
+```
+> Roomie será null si elije la opción "No"
+
+> Respuesta
+
+```json
+{
+  "usuario": {
+    "idUsuario": 1,
+    "esSuperUsuario": false,
+    "nombre": "Juan",
+    "apellidoPaterno": "Pérez",
+    "apellidoMaterno": "Sánchéz",
+    "imagenUrl": "http://imagen.ejemplo.com",
+    "email": "juan.perez@ejemplo.com",
+    "concesionario": {
+      "idConcesionario": 1,
+      "nombre": "Audi Center Pedregal"
+    },
+    "puesto": {
+      "idPuesto": 1,
+      "nombre": "Gerente de Ventas"
+    },
+    "fechaCumple": "1980-06-30",
+    "alergias": "",
+    "viaLlegada": {
+      "idViaLlegada": 1,
+      "nombre": "Terrestre"
+    },
+    "llegada": {
+      "fecha": "2017-08-01",
+      "vuelo": "AM 209"
+    },
+    "salida": {
+      "fecha": "2017-08-02",
+      "vuelo": "AM 209"
+    },
+    "roomie": {
+      "apellidoPaterno": "González",
+      "apellidoMaterno": "Ramírez",
+      "nombre": "Alberto",
+      "email": "alberto.ramirez@gmail.com"
+    }
+  }
+}
+```
+
+Permite actualizar la información de perfil del usuario. Los parámetros son idénticos al registro.
+
+### HTTP Request
+
+`POST http://example.com/api/v1/usuario/perfil`
+
+## Actualizar Token Push
+
+> Body petición:
+
+```json
+{
+  "udid": "ABCDEFGHI12345"
+}
+```
+> Roomie será null si elije la opción "No"
+
+> Respuesta
+
+```json
+{
+  "enviado": true
+}
+```
+
+<aside class="notice">Es necesario contar con sesión para utilizar este endpoint e identificar correctamente al usuario</aside>
+
+
+En el caso de que un usuario no haya aceptado las push en primera instancia y después las acepte, se deberá de actualizar el udid del dispositivo.
+
+### HTTP Request
+
+`POST http://example.com/api/v1/usuario/actualizarToken`
+
+### Body Parameters
+
+Parámetro | Tipo | Requerido | Descripción
+--------- | ----------- | ----------- | -----------
+udid | Sring | SI | Nuevo udid del dispositivo
+
 
 #Contenidos
 <aside class="success">Para todas las peticiones sucesivas se deberá de usar el token de sesión devuelto anteriormente en el header <code>authorization</code></aside>
@@ -1057,3 +1190,121 @@ meta.paginaSiguiente | Int | La página siguiente o bien `null` si no existe una
 meta.registrosEncontrados | Int | El total de registros que se devolvieron en esta petición.
 meta.registrosTotales | Int | El total de mensajes que existen en esta conversación
 
+
+## Ultimo visto
+> Body petición:
+
+```json
+{
+  "idMensaje": 42
+}
+```
+
+> Respuesta
+
+```json
+{
+    "enviado": true
+}
+```
+
+Para poder agrupar las notificaciones push es necesario que las apps notifiquen en todo momento cuál es el último mensaje que han visto. Idealmente se envía esta información cada vez que se actualice el layout de chat en los clientes, por ejemplo, al enviar o visualizar un mensaje a la conversación. NOTA: no incluir en la vista de la app el estatus del mensaje.
+
+### HTTP Request
+
+`POST http://example.com/api/v1/chats/mensajes/ultimoVisto/`
+
+### Body Petición
+Parámetro | Tipo | Requerido | Descripción
+--------- | ----------- | ----------- | -----------
+idMensaje | Int | SI | Id del ultimo mensaje.
+
+
+# Notificaciones Push
+
+## Chat
+Se enviará una notificación por cada nuevo mensaje que se reciba. Siguiendo el patrón de WhatsApp/Messenger, se deberán de mostrar todas las notificaciones en el caso de iOS y agrupar las notificaciones por conversación en el caso de Android.
+
+> Estructura iOS:
+
+```json
+{
+  "payload": {
+    "idUsuario": 12,
+    "mensajesNuevos": 1
+  }
+}
+```
+<aside class="notice">
+Cabe destacar que el json de iOS hace referencia únicamente a la propiedad <code>payload</code> del objeto de notificación, esto quiere decir que se envían a parte las propiedades <code>title</code>, <code>alert</code>, <code>sound</code>, <code>badge</code>, etcétera.
+</aside>
+
+> Estructura android:
+
+```json
+{
+  "payload": {
+    "idUsuario": 12,
+    "mensajesNuevos": 1
+  }
+}
+```
+<aside class="notice">
+De igual forma en android, los datos necesarios para mostrar correctamente la notificación se envían a parte. El json hace referencia únicamente a la propiedad <code>payload</code>.
+</aside>
+
+## Noticia
+Notificación de nueva noticia. Al hacer clic, deberá de abrirse la aplicación en la sección de noticias.
+> Estructura ambas plataformas:
+
+```json
+{
+  "payload": {
+    "tipo": "noticia"
+  }
+}
+```
+
+## Agenda
+Notificación de agenda actualizada. Al hacer clic, deberá de abrirse la aplicación en la sección de agenda o actualizar el contenido de la vista. También se utilizará para avisar de encuestas o votaciones con el título y mensaje correspondiente pero es importante que se abra la sección de agenda.
+> Estructura ambas plataformas:
+
+```json
+{
+  "payload": {
+    "tipo": "agenda"
+  }
+}
+```
+
+## Sede
+Notificación de sede actualizada. Al hacer clic, deberá de abrirse la aplicación en la sección de sede o actualizar el contenido de la vista.
+> Estructura ambas plataformas:
+
+```json
+{
+  "payload": {
+    "tipo": "sede"
+  }
+}
+```
+
+## General
+Notificación general. Al hacer clic, deberá de abrirse la aplicación o mostrarse al usuario. Para casos no contemplados.
+> Estructura ambas plataformas:
+
+```json
+{
+  "payload": {
+    "tipo": "general"
+  }
+}
+```
+
+
+# Stickers
+
+## Stickers
+Los stickers deberán ser reemplazados por el cliente en la vista de chat. **No enviar urls o imágenes**. Los stickers sólo pueden ser enviados en un mensaje autocontenido, es decir **no es posible enviar stickers en medio de un mensaje**. 
+
+Existirán 8 stickers y el texto a reemplazar seguirá este formato **::sticker_X::**, donde `X` va del `1` al `8`. Ejemplo: `::sticker_1::`
