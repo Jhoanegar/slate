@@ -974,7 +974,7 @@ Es necesario llamar este endpoint cada vez que el usuario entra a la sección de
 
 ### HTTP Request
 
-`GET http://example.com/api/v1/encuesta/`
+`GET http://example.com/api/v1/contactos/`
 
 ### Body Parameters
 Ninguno
