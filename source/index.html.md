@@ -15,8 +15,20 @@ search: true
 ---
 
 # Versiones
+## Versión 6
+
+29 de agosto (2), 2017
+
+
+* Se añadió el parámetro de respuesta `idChat` a la respuesta de [chats activos](#chats-activos)
+* Se añadió el parámetro de respuesta `idChat` a la respuesta de [enviar mensaje](#enviar-mensaje)
+* Se añadió el parámetro de respuesta `idChat` a la respuesta de [historial](#historial)
+* Ahora se requiere el parámetro `idChat` en el endpoint de [ultimo-visto](#ultimoVisto), el parámetro `idUsuario` ya no se requiere
+* Se añadió endpoints de developer
+
+
 ## Versión 5
-29 de agosto, 2017
+29 de agosto (1), 2017
 
 * Se añadió endpoint de [ultimo visto](#ultimo-visto)
 * Se añadió endpoint de [actualizar perfil](#actualizar-perfil)
@@ -1019,6 +1031,7 @@ Parámetro | Tipo | Descripción
 --------- | ----------- | ----------- | -----------
 chats | Array | Array que contiene los chats activos
 chats[] | Object | Objeto que representa un chat activo
+chats[].idChat | Object | Identificador del chat. Se utiliza en el endpoint [ultimo visto](#ultimo-visto)
 chats[].usuario | Object | Objeto que representa el usuario con el quien se tiene la conversacion
 chats[].usuario.idUsuario | Int | Id del usuario con quien se tiene la conversacion
 chats[].usuario.nombre | String | Nombre que se la da al chat y que coincide con el nombre de la persona con quien se tiene al chat
@@ -1043,7 +1056,8 @@ chats[].ultimoMensaje.fecha | Date | Fecha de envío del mensaje
 
 ```json
 {
-    "enviado": true
+    "enviado": true,
+    "idChat": 15
 }
 ```
 
@@ -1086,6 +1100,7 @@ Nótese que los parámetros en este endpoint se envían como <code>query string<
 
 ```json
 {
+    "idChat": 15,
     "mensajes": [
         {
             "mensaje": "Bien y tú?",
@@ -1197,7 +1212,7 @@ meta.registrosTotales | Int | El total de mensajes que existen en esta conversac
 ```json
 {
   "idMensaje": 42,
-  "idUsuario": 1
+  "idChat": 15
 }
 ```
 
@@ -1307,6 +1322,34 @@ Notificación general. Al hacer clic, deberá de abrirse la aplicación o mostra
 # Stickers
 
 ## Stickers
-Los stickers deberán ser reemplazados por el cliente en la vista de chat. **No enviar urls o imágenes**. Los stickers sólo pueden ser enviados en un mensaje autocontenido, es decir **no es posible enviar stickers en medio de un mensaje**. 
+Los stickers deberán ser reemplazados por el cliente en la vista de chat. **No enviar urls o imágenes**. Los stickers sólo pueden ser enviados en un mensaje autocontenido, es decir **no es posible enviar stickers en medio de un mensaje**.
 
 Existirán 8 stickers y el texto a reemplazar seguirá este formato **::sticker_X::**, donde `X` va del `1` al `8`. Ejemplo: `::sticker_1::`
+
+
+# Developer
+Los siguientes endpoints sólo están disponibles en tiempo de desarrollo y su objetivo es ayudar en las pruebas de la app, se desactivarán en producción.
+
+## Eliminar Usuario
+Elimina por completo un usuario de la base para permitir volver usar su correo
+
+> Body Petición
+
+```json
+{
+  "idUsuario": 2
+}
+```
+<aside class="error">
+Por favor, no borrar usuarios no creados por uno mismo.
+</aside>
+
+> Respuesta:
+
+```
+"OK"
+```
+
+### HTTP Request
+
+`POST http://example.com/api/v1/developer/eliminarUsuario`
