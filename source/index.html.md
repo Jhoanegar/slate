@@ -1196,7 +1196,8 @@ meta.registrosTotales | Int | El total de mensajes que existen en esta conversac
 
 ```json
 {
-  "idMensaje": 42
+  "idMensaje": 42,
+  "idUsuario": 1
 }
 ```
 
@@ -1218,6 +1219,7 @@ Para poder agrupar las notificaciones push es necesario que las apps notifiquen 
 Parámetro | Tipo | Requerido | Descripción
 --------- | ----------- | ----------- | -----------
 idMensaje | Int | SI | Id del ultimo mensaje.
+idUsuario | Int | SI | Id del usuario con el cual se tiene la conversación.
 
 
 # Notificaciones Push
