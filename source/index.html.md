@@ -15,6 +15,15 @@ search: true
 ---
 
 # Versiones
+## Versión 7
+30 de agosto, 2017
+
+* Se añadió el parémetro de respuesta `esSuperChat` al endpoint e [chats activos](#chats-activos)
+* Ahora el endpoint de `login` y `validarCodigo` devuelven un estatus `400` en lugar de `401` para que caiga en el caso de error que se muestra al usuario mediante un popup como lo indica la sección de [errores](#errores)
+* Añade [feed de noticias](#feed-de-imágenes)
+* Por seguridad, los endpoints de [developer](#developer) ahora requieren el mismo api token que la app.
+* Añade endpoint de [enviar push](#enviar-push)
+
 ## Versión 6
 
 29 de agosto (2), 2017
@@ -559,7 +568,7 @@ No es necesario enviar ambos simultáneamente pero sí es necesario enviar uno
     "alergias": "",
     "viaLlegada": {
       "idViaLlegada": 1,
-      "nombre": "Terrestre"
+      "nombre": "Terrestre"|
     },
     "llegada": {
       "fecha": "2017-08-01",
@@ -656,6 +665,57 @@ Devuelve las últimas noticias publicadas por los administradores.
 ### HTTP Request
 
 `GET http://example.com/api/v1/noticias/`
+
+### Body Parameters
+
+Sin parámetros
+
+## Feed de Imágenes
+> Body petición:
+
+```json
+{
+}
+```
+> Query petición:
+
+```json
+{
+  "pagina": 1
+}
+```
+> El parámetro `página` tiene como default `1`
+
+
+> Respuesta
+
+```json
+{
+    "feed": [
+        {
+            "idFeed": 2,
+            "urlImagen": "https://www.diariomotor.com/imagenes/2012/10/audi-marca-dm-7.jpg\r",
+            "usuario": {
+                "id": 1,
+                "nombre": "Tron"
+            }
+        }
+    ],
+    "meta": {
+        "paginaActual": 1,
+        "paginaSiguiente": null,
+        "registrosEncontrados": 1,
+        "registrosTotales": 1
+    }
+}
+```
+> Las imágenes están paginadas, más info ver [historial](#historial)
+
+Devuelve las últimas imágenes publicadas por los usuarios.
+
+### HTTP Request
+
+`GET http://example.com/api/v1/feed/`
 
 ### Body Parameters
 
@@ -1005,6 +1065,8 @@ Ninguno
 {
     "chats": [
         {
+            "idChat": "1",
+            "esSuperChat": true,
             "usuario": {
                 "idUsuario": 1,
                 "nombre": "Jhoan",
@@ -1032,6 +1094,7 @@ Parámetro | Tipo | Descripción
 chats | Array | Array que contiene los chats activos
 chats[] | Object | Objeto que representa un chat activo
 chats[].idChat | Object | Identificador del chat. Se utiliza en el endpoint [ultimo visto](#ultimo-visto)
+chats[].esSuperChat | Object | Indica si es necesario ser super usuario para mandar mensajes en el chat. La propiedad es super usuario es devuelta en [pre-registro](#pre-registro) y [login](#login)
 chats[].usuario | Object | Objeto que representa el usuario con el quien se tiene la conversacion
 chats[].usuario.idUsuario | Int | Id del usuario con quien se tiene la conversacion
 chats[].usuario.nombre | String | Nombre que se la da al chat y que coincide con el nombre de la persona con quien se tiene al chat
@@ -1350,6 +1413,31 @@ Por favor, no borrar usuarios no creados por uno mismo.
 "OK"
 ```
 
+## Enviar push
+Le envía una notificación push personalizada a un usuario identificado por el email
+
+> Body Petición
+
+```json
+{
+  "email": "tron@evoluciona.com",
+  "titulo": "titulo",
+  "mensaje": "mensaje",
+  "payload": {
+    "test": "foo"
+  }
+}
+```
+<aside class="success">
+Payload puede tener una cantidad arbitraria de llaves
+</aside>
+
+> Respuesta:
+
+```
+"OK"
+```
+
 ### HTTP Request
 
-`POST http://example.com/api/v1/developer/eliminarUsuario`
+`POST http://example.com/api/v1/developer/enviarPush`
