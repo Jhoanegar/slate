@@ -24,6 +24,10 @@ search: true
 * Por seguridad, los endpoints de [developer](#developer) ahora requieren el mismo api token que la app.
 * Añade endpoint de [enviar push](#enviar-push)
 
+**UPDATE 1**
+
+* Se vuelve opcional el `idUsuario` en endpoint de [enviar mensaje](#enviar-mensaje) y se agrega el parámetro opcional `idChat`. [Ver más](#enviar-mensaje)
+
 ## Versión 6
 
 29 de agosto (2), 2017
@@ -1111,7 +1115,8 @@ chats[].ultimoMensaje.fecha | Date | Fecha de envío del mensaje
 ```json
 {
   "idUsuario": 1,
-  "mensaje": "Hola"
+  "mensaje": "Hola",
+  "idChat": null
 }
 ```
 
@@ -1125,6 +1130,10 @@ chats[].ultimoMensaje.fecha | Date | Fecha de envío del mensaje
 ```
 
 Envía un mensaje a un usuario. En este proceso se crea internamente el chat y el cliente no necesita saber la existencia de este. Al haber al menos un mensaje entre dos usuarios el chat se es devuelto por el endpoint de chats activos.
+
+### Update
+
+En general, los usuarios normales envían el id del usuario con el que quieren hablar puesto que no hay chats grupales, sin embargo, para el caso de los superusuarios, deben tener una manera de enviar el mensaje sin tener un id de usuario concreto, es por esto que se debe enviar el `idChat` (devuelto por [chats activos](#chats-activos)) en lugar del `idUsuario`. Este caso sólo debería de aplicar para *superusuarios* que mandan mensajes a *superchats*
 
 ### HTTP Request
 
