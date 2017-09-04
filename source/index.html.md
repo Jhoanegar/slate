@@ -756,7 +756,7 @@ Publica una nueva imagen en el feed de imágenes
 
 ### HTTP Request
 
-`GET http://example.com/api/v1/feed/`
+`POST http://example.com/api/v1/feed/nueva`
 
 ### Body Parameters
 
