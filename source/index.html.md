@@ -15,12 +15,18 @@ search: true
 ---
 
 # Versiones
+
+## Versión 8
+4 de septiembre, 2017
+
+* Añade el endpoint de [nueva-imagen](#nueva-imagen)
+
 ## Versión 7
 30 de agosto, 2017
 
 * Se añadió el parémetro de respuesta `esSuperChat` al endpoint e [chats activos](#chats-activos)
 * Ahora el endpoint de `login` y `validarCodigo` devuelven un estatus `400` en lugar de `401` para que caiga en el caso de error que se muestra al usuario mediante un popup como lo indica la sección de [errores](#errores)
-* Añade [feed de noticias](#feed-de-imágenes)
+* Añade [feed de noticias](#feed-de-noticias)
 * Por seguridad, los endpoints de [developer](#developer) ahora requieren el mismo api token que la app.
 * Añade endpoint de [enviar push](#enviar-push)
 
@@ -725,6 +731,37 @@ Devuelve las últimas imágenes publicadas por los usuarios.
 
 Sin parámetros
 
+## Nueva imágen
+> Body petición:
+
+```json
+{
+  "urlImagen": "http://..."
+}
+```
+
+> Respuesta
+
+```json
+{
+    "feed": {
+        "idFeed": 9,
+        "idUsuario": 2,
+        "urlImagen": "lol"
+    }
+}
+```
+
+Publica una nueva imagen en el feed de imágenes
+
+### HTTP Request
+
+`GET http://example.com/api/v1/feed/`
+
+### Body Parameters
+
+Sin parámetros
+
 ## Agenda
 > Body petición:
 
@@ -790,7 +827,9 @@ Devuelve la agenda del evento, separada en días.
 
 ### Body Parameters
 
-Sin parámetros
+Parámetro | Tipo | Requerido | Descripción
+--------- | ----------- | ----------- | -----------
+urlImagen | Sring | SI | Url de la imagen publicada en AWS
 
 ## Sede
 > Body petición:
