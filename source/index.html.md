@@ -16,6 +16,12 @@ search: true
 
 # Versiones
 
+## Versión 9
+6 de septiembre, 2017
+
+* Se vuelve opcional el `idUsuario` en endpoint de [historial](#historial) y se agrega el parámetro opcional `idChat`. [Ver más](#historial)
+
+
 ## Versión 8
 4 de septiembre, 2017
 
@@ -1199,6 +1205,7 @@ mensaje | Str | Contenido del mensaje a enviar
 ```json
 {
   "idUsuario": 1,
+  "idChat": null
   "pagina": 1,
   "desde": "2017-01-01T00:00:00.000Z"
 }
@@ -1278,7 +1285,7 @@ Nótese que los parámetros en este endpoint se envían como <code>query string<
     }
 }
 ```
-Devuelve el historial de mensajes en una conversación.
+Devuelve el historial de mensajes en una conversación. Cuando se intente obtener el historial de un *superchat* se deberá de enviar el `idChat` en lugar del `idUsuario`
 
 <aside class="success">
 Este endpoint está paginado.
@@ -1291,7 +1298,8 @@ Este endpoint está paginado.
 ### Query String
 Parámetro | Tipo | Requerido |Descripción
 --------- | ----------- | ----------- | -----------
-idUsuario | Int | SI | Usuario del cual se desea obtener el historial
+idUsuario | Int | NO | Usuario del cual se desea obtener el historial
+idChat | Int | NO | idChat del cual se desea obtener el historial. Valído para *superchats*
 pagina | Int | NO | Pagina que se desea obtener del historia. Default `1`
 desde | Date | NO | Fecha desde la cual se desea obtener el historial. Default `NOW() / new Date`
 
