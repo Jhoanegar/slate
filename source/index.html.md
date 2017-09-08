@@ -16,6 +16,10 @@ search: true
 
 # Versiones
 
+## Versión 10
+8 de septiembre, 2017
+
+* El `idUsuario` se vuelve `idChat` para evitar preguntar si es superchat o superusuario. [Ver más](#notificaciones-push)
 ## Versión 9
 6 de septiembre, 2017
 
@@ -1366,7 +1370,7 @@ Se enviará una notificación por cada nuevo mensaje que se reciba. Siguiendo el
 ```json
 {
   "payload": {
-    "idUsuario": 12,
+    "idChat": 12,
     "mensajesNuevos": 1
   }
 }
@@ -1380,7 +1384,7 @@ Cabe destacar que el json de iOS hace referencia únicamente a la propiedad <cod
 ```json
 {
   "payload": {
-    "idUsuario": 12,
+    "idChat": 12,
     "mensajesNuevos": 1
   }
 }
