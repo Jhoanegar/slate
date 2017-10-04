@@ -164,6 +164,10 @@ El token será un API SECRET en el caso de endpoints que no requieran sesión y 
       "idPuesto": 1,
       "nombre": "Gerente de Ventas"
     },
+    "workshop": {
+      "idWorkshop": 1,
+      "nombre": "Workshop 1"
+    },
     "fechaCumple": "1980-06-30",
     "alergias": "",
     "viaLlegada": {
@@ -250,11 +254,23 @@ udid | String | SI | Token para envío de notificaciones push. Si el usuario no 
       "idVia": 2,
       "nombre": "Aérea"
     }
+  ],
+  "workshops": [
+    {
+      "idWorkshop": 1,
+      "nombre": "Workshop 1"
+    },
+    {
+      "idWorkshop": 2,
+      "nombre": "Workshop 2"
+    }
   ]
 }
 ```
 
-Este endpoint obtiene los catálogos necesarios para llenar el formulario de registro y el perfil de usuario
+Este endpoint obtiene los catálogos necesarios para llenar el formulario de registro y el perfil de usuario.
+<aside class="info"><strong>Nota: </strong>En el caso de los workshops, si el array viene vacío, el input y su label en la aplicación deberán de ocultarse</aside>
+
 
 ### HTTP Request
 
@@ -279,6 +295,7 @@ Sin parámetros
     "email": "juan.perez@ejemplo.com",
     "idConcesionario": 1,
     "idPuesto": 1,
+    "idVia": 1,
     "fechaCumple": "1980-06-30",
     "imagenUrl": "http://..."
     "alergias": "",
@@ -323,6 +340,10 @@ Sin parámetros
       "idPuesto": 1,
       "nombre": "Gerente de Ventas"
     },
+    "workshop": {
+      "idWorkshop": 1,
+      "nombre": "Workshop 1"
+    },
     "fechaCumple": "1980-06-30",
     "alergias": "",
     "viaLlegada": {
@@ -363,8 +384,9 @@ apellidoPaterno | String | SI | Apellido del Usuario
 apellidoMaterno | String | SI | Segundo Apellido del usuario
 email | String | SI | Email del usuario
 imagenUrl | String | SI | Url de la imagen del usuario
-idConcesionario | Int | SI | Id del concesionario elegido por el usuario
+idConcesionario | Int | NO | Id del concesionario elegido por el usuario
 idPuesto | Int | SI | Id del puesto elegido por el usuario
+idWorkshop | Int | SI | Id del workshop por el usuario
 fechaCumple | String | SI | Fecha de nacimiento del usuario en formato "YYYY-MM-DD"
 alergias | String | NO | Alergías del usuario
 idViaLlegada | String | SI | Id de la vía de llegada del usuario
@@ -443,6 +465,10 @@ Este endpoint es un alias del endpoint de login.
     "puesto": {
       "idPuesto": 1,
       "nombre": "Gerente de Ventas"
+    },
+    "workshop": {
+      "idWorkshop": 1,
+      "nombre": "Workshop 1"
     },
     "fechaCumple": "1980-06-30",
     "alergias": "",
@@ -541,6 +567,7 @@ No es necesario enviar ambos simultáneamente pero sí es necesario enviar uno
     "email": "juan.perez@ejemplo.com",
     "idConcesionario": 1,
     "idPuesto": 1,
+    "idWorkshop": 1,
     "imagenUrl": "http://",
     "fechaCumple": "1980-06-30",
     "alergias": "",
@@ -583,6 +610,10 @@ No es necesario enviar ambos simultáneamente pero sí es necesario enviar uno
     "puesto": {
       "idPuesto": 1,
       "nombre": "Gerente de Ventas"
+    },
+    "workshop": {
+      "idWorkshop": 1,
+      "nombre": "Workshop 1"
     },
     "fechaCumple": "1980-06-30",
     "alergias": "",
